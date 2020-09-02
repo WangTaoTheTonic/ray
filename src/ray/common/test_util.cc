@@ -27,6 +27,20 @@
 
 namespace ray {
 
+void TestSetupUtil::AddWorker(const std::string node_id, const std::string worker_id) {
+  nodes_to_workers[node_id].push_back(worker_id);
+}
+
+void TestSetupUtil::InitWorkers(const std::string node_id, const uint32_t worker_number) {
+  std::vector<std::string> v = std::vector<std::string>{};
+  v.reserve(worker_number * 2);
+  nodes_to_workers[node_id] = v;
+}
+
+std::vector<std::string> &TestSetupUtil::GetWorkers(const std::string node_id) {
+  return nodes_to_workers[node_id];
+}
+
 void TestSetupUtil::StartUpRedisServers(const std::vector<int> &redis_server_ports) {
   if (redis_server_ports.empty()) {
     TEST_REDIS_SERVER_PORTS.push_back(StartUpRedisServer(0));
@@ -245,5 +259,7 @@ std::string TEST_GCS_SERVER_EXEC_PATH;
 std::string TEST_RAYLET_EXEC_PATH;
 /// Path to mock worker executable binary. Required by raylet.
 std::string TEST_MOCK_WORKER_EXEC_PATH;
+
+std::unordered_map<std::string, std::vector<std::string>> nodes_to_workers;
 
 }  // namespace ray

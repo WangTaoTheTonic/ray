@@ -88,6 +88,8 @@ extern std::string TEST_RAYLET_EXEC_PATH;
 /// Path to mock worker executable binary. Required by raylet.
 extern std::string TEST_MOCK_WORKER_EXEC_PATH;
 
+extern std::unordered_map<std::string, std::vector<std::string>> nodes_to_workers;
+
 //--------------------------------------------------------------------------------
 // COMPONENT MANAGEMENT CLASSES FOR TEST CASES
 //--------------------------------------------------------------------------------
@@ -115,6 +117,12 @@ class TestSetupUtil {
                                  const std::string &redis_address,
                                  const std::string &resource);
   static void StopRaylet(const std::string &raylet_socket_name);
+
+  static void AddWorker(const std::string node_id, const std::string worker_id);
+
+  static void InitWorkers(const std::string node_id, const uint32_t worker_number);
+
+  static std::vector<std::string> &GetWorkers(const std::string node_id);
 
  private:
   static int StartUpRedisServer(const int &port);

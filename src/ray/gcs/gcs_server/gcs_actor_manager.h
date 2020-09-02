@@ -276,7 +276,7 @@ class GcsActorManager : public rpc::ActorInfoHandler {
   /// scope or the owner has died.
   /// TODO: For detached actors, this should be called when the application
   /// deregisters the actor.
-  void DestroyActor(const ActorID &actor_id);
+  virtual void DestroyActor(const ActorID &actor_id);
 
   /// Get unresolved actors that were submitted from the specified node.
   absl::flat_hash_set<ActorID> GetUnresolvedActorsByOwnerNode(

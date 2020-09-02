@@ -253,14 +253,14 @@ class GcsActorScheduler : public GcsActorSchedulerInterface {
                                     std::shared_ptr<GcsLeasedWorker> worker);
 
   /// Select a node from alive nodes randomly.
-  std::shared_ptr<rpc::GcsNodeInfo> SelectNodeRandomly() const;
+  virtual std::shared_ptr<rpc::GcsNodeInfo> SelectNodeRandomly() const;
 
   /// Get an existing lease client or connect a new one.
-  std::shared_ptr<WorkerLeaseInterface> GetOrConnectLeaseClient(
+  virtual std::shared_ptr<WorkerLeaseInterface> GetOrConnectLeaseClient(
       const rpc::Address &raylet_address);
 
   /// Get or create CoreWorkerClient to communicate with the remote leased worker.
-  std::shared_ptr<rpc::CoreWorkerClientInterface> GetOrConnectCoreWorkerClient(
+  virtual std::shared_ptr<rpc::CoreWorkerClientInterface> GetOrConnectCoreWorkerClient(
       const rpc::Address &worker_address);
 
  protected:
