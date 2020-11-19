@@ -687,10 +687,10 @@ Status ServiceBasedNodeInfoAccessor::AsyncSubscribeToResources(
 Status ServiceBasedNodeInfoAccessor::AsyncReportHeartbeat(
     const std::shared_ptr<rpc::HeartbeatTableData> &data_ptr,
     const StatusCallback &callback) {
-  absl::MutexLock lock(&mutex_);
-  cached_heartbeat_.mutable_heartbeat()->CopyFrom(*data_ptr);
+  rpc::ReportHeartbeatRequest heartbeat_request;
+  heartbeat_request.mutable_heartbeat()->CopyFrom(*data_ptr);
   client_impl_->GetGcsRpcClient().ReportHeartbeat(
-      cached_heartbeat_,
+      heartbeat_request,
       [callback](const Status &status, const rpc::ReportHeartbeatReply &reply) {
         if (callback) {
           callback(status);
@@ -700,13 +700,38 @@ Status ServiceBasedNodeInfoAccessor::AsyncReportHeartbeat(
 }
 
 void ServiceBasedNodeInfoAccessor::AsyncReReportHeartbeat() {
-  absl::MutexLock lock(&mutex_);
-  if (cached_heartbeat_.has_heartbeat()) {
+  if (last_heartbeat_resources_) {
+    auto heartbeat_data = std::make_shared<HeartbeatTableData>();
+    heartbeat_data->set_client_id(local_node_id_.Binary());
+    for (const auto &resource_pair :
+         last_heartbeat_resources_->GetTotalResources().GetResourceMap()) {
+      (*heartbeat_data->mutable_resources_total())[resource_pair.first] =
+          resource_pair.second;
+    }
+
+    for (const auto &resource_pair :
+         last_heartbeat_resources_->GetAvailableResources().GetResourceMap()) {
+      (*heartbeat_data->mutable_resources_available())[resource_pair.first] =
+          resource_pair.second;
+    }
+
+    for (const auto &resource_pair :
+         last_heartbeat_resources_->GetLoadResources().GetResourceMap()) {
+      (*heartbeat_data->mutable_resource_load())[resource_pair.first] =
+          resource_pair.second;
+    }
+    rpc::ReportHeartbeatRequest heartbeat_request;
+    heartbeat_request.mutable_heartbeat()->CopyFrom(*heartbeat_data);
     RAY_LOG(INFO) << "Rereport heartbeat.";
     client_impl_->GetGcsRpcClient().ReportHeartbeat(
-        cached_heartbeat_,
+        heartbeat_request,
         [](const Status &status, const rpc::ReportHeartbeatReply &reply) {});
   }
+}
+
+std::shared_ptr<SchedulingResources>
+ServiceBasedNodeInfoAccessor::GetLastHeartbeatResources() {
+  return last_heartbeat_resources_;
 }
 
 Status ServiceBasedNodeInfoAccessor::AsyncGetAllHeartbeat(

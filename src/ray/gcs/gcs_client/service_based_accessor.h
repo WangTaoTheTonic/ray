@@ -194,6 +194,8 @@ class ServiceBasedNodeInfoAccessor : public NodeInfoAccessor {
 
   void AsyncReReportHeartbeat() override;
 
+  std::shared_ptr<SchedulingResources> GetLastHeartbeatResources() override;
+
   Status AsyncGetAllHeartbeat(
       const ItemCallback<rpc::HeartbeatBatchTableData> &callback) override;
 
@@ -221,13 +223,6 @@ class ServiceBasedNodeInfoAccessor : public NodeInfoAccessor {
   /// server restarts from a failure.
   FetchDataOperation fetch_node_data_operation_;
 
-  // Mutex to protect the cached_heartbeat_ field.
-  absl::Mutex mutex_;
-
-  /// Save the heartbeat data, so we can resend it again when GCS server restarts from a
-  /// failure.
-  rpc::ReportHeartbeatRequest cached_heartbeat_ GUARDED_BY(mutex_);
-
   void HandleNotification(const GcsNodeInfo &node_info);
 
   ServiceBasedGcsClient *client_impl_;
@@ -247,6 +242,8 @@ class ServiceBasedNodeInfoAccessor : public NodeInfoAccessor {
   std::unordered_map<NodeID, GcsNodeInfo> node_cache_;
   /// The set of removed nodes.
   std::unordered_set<NodeID> removed_nodes_;
+
+  std::shared_ptr<SchedulingResources> last_heartbeat_resources_;
 };
 
 /// \class ServiceBasedTaskInfoAccessor

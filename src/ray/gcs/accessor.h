@@ -16,6 +16,7 @@
 
 #include "ray/common/id.h"
 #include "ray/common/placement_group.h"
+#include "ray/common/task/scheduling_resources.h"
 #include "ray/common/task/task_spec.h"
 #include "ray/gcs/callback.h"
 #include "ray/gcs/entry_change_notification.h"
@@ -575,6 +576,9 @@ class NodeInfoAccessor {
 
   /// Resend heartbeat when GCS restarts from a failure.
   virtual void AsyncReReportHeartbeat() = 0;
+
+  /// Return cache stores last heartbeat resources. Used by light heartbeat.
+  virtual std::shared_ptr<SchedulingResources> GetLastHeartbeatResources();
 
   /// Get newest heartbeat of all nodes from GCS asynchronously. Only used when light
   /// heartbeat enabled.

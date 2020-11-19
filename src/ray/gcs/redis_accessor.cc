@@ -600,6 +600,10 @@ Status RedisNodeInfoAccessor::AsyncReportHeartbeat(
 
 void RedisNodeInfoAccessor::AsyncReReportHeartbeat() {}
 
+std::shared_ptr<SchedulingResources> RedisNodeInfoAccessor::GetLastHeartbeatResources() {
+  return std::make_shared<SchedulingResources>();
+}
+
 Status RedisNodeInfoAccessor::AsyncSubscribeBatchHeartbeat(
     const ItemCallback<HeartbeatBatchTableData> &subscribe, const StatusCallback &done) {
   RAY_CHECK(subscribe != nullptr);

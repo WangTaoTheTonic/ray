@@ -1,5 +1,5 @@
-# Bazel build
-# C/C++ documentation: https://docs.bazel.build/versions/master/be/c-cpp.html
+#Bazel build
+#C / C++ documentation : https:  // docs.bazel.build/versions/master/be/c-cpp.html
 
 load("@rules_python//python:defs.bzl", "py_library")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
@@ -23,9 +23,9 @@ config_setting(
     values = {"compilation_mode": "opt"},
 )
 
-# === Begin of rpc definitions ===
+#== = Begin of rpc definitions == =
 
-# GRPC common lib.
+#GRPC common lib.
 cc_library(
     name = "grpc_common_lib",
     srcs = glob([
@@ -44,7 +44,7 @@ cc_library(
     ],
 )
 
-# Node manager gRPC lib.
+#Node manager gRPC lib.
 cc_grpc_library(
     name = "node_manager_cc_grpc",
     srcs = ["//src/ray/protobuf:node_manager_proto"],
@@ -52,7 +52,7 @@ cc_grpc_library(
     deps = ["//src/ray/protobuf:node_manager_cc_proto"],
 )
 
-# Node manager server and client.
+#Node manager server and client.
 cc_library(
     name = "node_manager_rpc",
     hdrs = glob([
@@ -69,7 +69,7 @@ cc_library(
     ],
 )
 
-# gcs_service gRPC lib.
+#gcs_service gRPC lib.
 cc_grpc_library(
     name = "gcs_service_cc_grpc",
     srcs = ["//src/ray/protobuf:gcs_service_proto"],
@@ -77,7 +77,7 @@ cc_grpc_library(
     deps = ["//src/ray/protobuf:gcs_service_cc_proto"],
 )
 
-# gcs rpc server and client.
+#gcs rpc server and client.
 cc_library(
     name = "gcs_service_rpc",
     hdrs = glob([
@@ -95,7 +95,7 @@ cc_library(
     ],
 )
 
-# Object manager gRPC lib.
+#Object manager gRPC lib.
 cc_grpc_library(
     name = "object_manager_cc_grpc",
     srcs = ["//src/ray/protobuf:object_manager_proto"],
@@ -103,7 +103,7 @@ cc_grpc_library(
     deps = ["//src/ray/protobuf:object_manager_cc_proto"],
 )
 
-# Object manager rpc server and client.
+#Object manager rpc server and client.
 cc_library(
     name = "object_manager_rpc",
     hdrs = glob([
@@ -120,7 +120,7 @@ cc_library(
     ],
 )
 
-# Worker gRPC lib.
+#Worker gRPC lib.
 cc_grpc_library(
     name = "worker_cc_grpc",
     srcs = ["//src/ray/protobuf:core_worker_proto"],
@@ -128,7 +128,7 @@ cc_grpc_library(
     deps = ["//src/ray/protobuf:worker_cc_proto"],
 )
 
-# worker server and client.
+#worker server and client.
 cc_library(
     name = "worker_rpc",
     srcs = glob([
@@ -149,7 +149,7 @@ cc_library(
     ],
 )
 
-# Metrics Agent gRPC lib.
+#Metrics Agent gRPC lib.
 cc_grpc_library(
     name = "reporter_cc_grpc",
     srcs = ["//src/ray/protobuf:reporter_proto"],
@@ -157,7 +157,7 @@ cc_grpc_library(
     deps = ["//src/ray/protobuf:reporter_cc_proto"],
 )
 
-# Metrics Agent client.
+#Metrics Agent client.
 cc_library(
     name = "reporter_rpc",
     hdrs = glob([
@@ -175,7 +175,7 @@ cc_library(
     ],
 )
 
-# Agent manager.
+#Agent manager.
 cc_grpc_library(
     name = "agent_manager_cc_grpc",
     srcs = ["//src/ray/protobuf:agent_manager_proto"],
@@ -199,11 +199,11 @@ cc_library(
     ],
 )
 
-# === End of rpc definitions ===
+#== = End of rpc definitions == =
 
-# === Begin of plasma definitions ===
+#== = Begin of plasma definitions == =
 
-# TODO(mehrdadn): (How to) support dynamic linking?
+#TODO(mehrdadn) : (How to)support dynamic linking ?
 PROPAGATED_WINDOWS_DEFINES = ["ARROW_STATIC"]
 
 PLASMA_COPTS = COPTS + select({
@@ -334,7 +334,7 @@ flatbuffer_cc_library(
     out_prefix = "src/ray/object_manager/plasma/",
 )
 
-# === End of plasma definitions ===
+#== = End of plasma definitions == =
 
 cc_library(
     name = "ray_common",
@@ -370,8 +370,8 @@ cc_library(
     ],
 )
 
-# This header is used to warp some streaming code so we can reduce suspicious
-# symbols export.
+#This header is used to warp some streaming code so we can reduce suspicious
+#symbols export.
 cc_library(
     name = "exported_streaming_internal",
     srcs = glob(
@@ -471,6 +471,8 @@ cc_library(
         ":gcs_service_rpc",
         ":gcs_table_storage_lib",
         ":node_manager_rpc",
+        ":service_based_gcs_client_lib",
+        ":ray_common",
         ":raylet_client_lib",
         ":worker_rpc",
     ],
@@ -841,7 +843,7 @@ cc_test(
         "//:msvc-cl": [
         ],
         "//conditions:default": [
-            # Ignore this warning since it's impractical to fix in the relevant headers
+#Ignore this warning since it's impractical to fix in the relevant headers
             "-Wno-inconsistent-missing-override",
         ],
     }),
@@ -1403,10 +1405,10 @@ filegroup(
 filegroup(
     name = "extra_actions_base_proto",
     srcs = [
-        # TODO: Replace our file with the built-in copy once this issue is resolved:
-        #   https://github.com/bazelbuild/bazel/issues/8738
+#TODO : Replace our file with the built - in copy once this issue is resolved:
+#https:  // github.com/bazelbuild/bazel/issues/8738
         "thirdparty/protobuf/extra_actions_base.proto",
-        #"@bazel_tools//src/main/protobuf:extra_actions_base.proto",
+#"@bazel_tools//src/main/protobuf:extra_actions_base.proto",
     ],
 )
 
@@ -1590,7 +1592,7 @@ cc_library(
     ],
 )
 
-# TODO(micafan) Support test group in future. Use test group we can run all gcs test once.
+#TODO(micafan) Support test group in future.Use test group we can run all gcs test once.
 cc_test(
     name = "redis_gcs_client_test",
     srcs = ["src/ray/gcs/test/redis_gcs_client_test.cc"],
@@ -1739,13 +1741,13 @@ pyx_library(
         "python/ray/includes/*.pxd",
         "python/ray/includes/*.pxi",
     ]),
-    # Export ray ABI symbols, which can then be used by _streaming.so.
-    # We need to dlopen this lib with RTLD_GLOBAL to use ABI in this
-    # shared lib, see python/ray/__init__.py.
+#Export ray ABI symbols, which can then be used by _streaming.so.
+#We need to dlopen this lib with RTLD_GLOBAL to use ABI in this
+#shared lib, see python / ray / __init__.py.
     cc_kwargs = dict(
         srcs = PYX_SRCS,
         copts = COPTS + PYX_COPTS,
-        # see https://github.com/tensorflow/tensorflow/blob/r2.1/tensorflow/lite/BUILD#L444
+#see https:  // github.com/tensorflow/tensorflow/blob/r2.1/tensorflow/lite/BUILD#L444
         linkopts = select({
             "@bazel_tools//src/conditions:darwin": [
                 "-Wl,-exported_symbols_list,$(location //:src/ray/ray_exported_symbols.lds)",
@@ -1799,7 +1801,7 @@ cc_binary(
         "src/ray/core_worker/lib/java/*.cc",
     ]),
     copts = COPTS,
-    # Export ray ABI symbols, which can then be used by libstreaming_java.so. see `//:_raylet`
+#Export ray ABI symbols, which can then be used by libstreaming_java.so.see `  //:_raylet`
     linkopts = select({
         "@bazel_tools//src/conditions:darwin": [
             "-Wl,-exported_symbols_list,$(location //:src/ray/ray_exported_symbols.lds)",
@@ -1906,8 +1908,8 @@ filegroup(
     ],
 )
 
-# This is a dummy test dependency that causes the python tests to be
-# re-run if any of these files changes.
+#This is a dummy test dependency that causes the python tests to be
+#re - run if any of these files changes.
 py_library(
     name = "ray_lib",
     srcs = glob(
@@ -1976,9 +1978,9 @@ genrule(
     ],
     outs = ["install_py_proto.out"],
     cmd = """
-        # NOTE(hchen): Protobuf doesn't allow specifying Python package name. So we use this `sed`
-        # command to change the import path in the generated file.
-        # shellcheck disable=SC2006
+#NOTE(hchen) : Protobuf doesn't allow specifying Python package name. So we use this `sed`
+#command to change the import path in the generated file.
+#shellcheck disable = SC2006
         files=(`ls python/ray/core/generated/*_pb2*.py`)
         sed -i -E 's/from src.ray.protobuf/from ./' "$${files[@]}"
         sed -i -E 's/from opencensus.proto.metrics.v1 import/from . import/' "$${files[@]}"
